@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>3D - Socket</title>
+</head>
+
+<body>
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src=''></script>
+
+  <script src="https://threejs.org/build/three.min.js"></script>
+  <script src="https://threejs.org/examples/js/libs/dat.gui.min.js"></script>
+  <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+  <script>
+
+
+    // function deg2rad(v) {
+    //   return v / 180 * Math.PI
+    // }
+
+    let data = ""
+    // var scene = new THREE.Scene();
+    // var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+    // // ligth 3d start
+    // var light = new THREE.SpotLight(0xffffff, 0.5);
+    // light.rotation.set('x', deg2rad(45))
+    // light.rotation.set('y', deg2rad(-45))
+
+    // light.position.y = 5
+    // light.position.z = 3
+    // light.position.z = 5
+    // // light.angle = Math.PI / 4;
+    // // light.penumbra = 0.05;
+    // // light.decay = 2;
+    // // light.distance = 200;
+    // // ligth 3d end 
+    // console.log(camera)
+    // console.log('ligth', light)
+    // lightHelper = new THREE.SpotLightHelper(light);
+    // scene.add(lightHelper);
+    // var renderer = new THREE.WebGLRenderer();
+
+    // // control begin
+    // var controls = new THREE.OrbitControls(camera, renderer.domElement);
+    // // controls.addEventListener('change', renderer);
+    // // controls.minDistance = 20;
+    // // controls.maxDistance = 500;
+    // // controls.enablePan = false;
+    // // control end
+    // renderer.setSize(window.innerWidth, window.innerHeight);
+    // document.body.appendChild(renderer.domElement);
+
+    // var geometry = new THREE.BoxGeometry(2, 0.5, 2);
+    // var material = new THREE.MeshStandardMaterial({
+    //   color: 'red',
+    // });
+    // console.log(material)
+    // var cube = new THREE.Mesh(geometry, material);
+    // scene.add(cube);
+
+    // camera.position.z = 5;
+    // camera.position.y = 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // let arrNumber = [0, 0, 0]
+    var socket = io('http://localhost');
+    // socket.on('testIot', function (buf) {
+    //   data += buf
+    //   if (data.match(/\n/)) {
+    //     const d = data.split('\n')
+    //     const v = d.shift()
+    //     data = d.join('')
+    //     arrNumber = v.split('\t').map(item => parseFloat(item))
+    //   }
+    //   // console.log(data.split('\t'));
+    //   // socket.emit('my other event', { my: 'data' });
+    // });
+    // var animate = function () {
+    //   requestAnimationFrame(animate);
+    //   // if (arrNumber[0]) {
+    //   const rx = (arrNumber[1] / -180) * Math.PI
+    //   const ry = (arrNumber[2] / 180) * Math.PI
+    //   const rz = (arrNumber[0] / 180) * Math.PI
+    //   // }
+    //   // rx = rx + 0.01
+    //   camera.rotation.x = rx
+    //   camera.rotation.y = ry
+    //   // camera.rotation.z = rz
+
+    //   // cube.rotation.z = (arrNumber[0] / -180) * Math.PI
+    //   // cube.rotation.x = (arrNumber[1] / -180) * Math.PI
+    //   // cube.rotation.y = (arrNumber[2] / 180) * Math.PI
+
+    //   renderer.render(scene, camera);
+    // };
+
+    // animate();
+    // function buildGui() {
+    //   gui = new dat.GUI();
+    //   var params = {
+    //     'light color': spotLight.color.getHex(),
+    //     intensity: spotLight.intensity,
+    //     distance: spotLight.distance,
+    //     angle: spotLight.angle,
+    //     penumbra: spotLight.penumbra,
+    //     decay: spotLight.decay
+    //   };
+    //   gui.addColor(params, 'light color').onChange(function (val) {
+    //     spotLight.color.setHex(val);
+    //     render();
+    //   });
+    //   gui.add(params, 'intensity', 0, 2).onChange(function (val) {
+    //     spotLight.intensity = val;
+    //     render();
+    //   });
+    //   gui.add(params, 'distance', 50, 200).onChange(function (val) {
+    //     spotLight.distance = val;
+    //     render();
+    //   });
+    //   gui.add(params, 'angle', 0, Math.PI / 3).onChange(function (val) {
+    //     spotLight.angle = val;
+    //     render();
+    //   });
+    //   gui.add(params, 'penumbra', 0, 1).onChange(function (val) {
+    //     spotLight.penumbra = val;
+    //     render();
+    //   });
+    //   gui.add(params, 'decay', 1, 2).onChange(function (val) {
+    //     spotLight.decay = val;
+    //     render();
+    //   });
+    //   gui.open();
+    // }
+    // // buildGui()
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    var geometry = new THREE.BoxGeometry(1, 1, 1);
+    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    var cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    camera.position.z = 5;
+
+    socket.on('testIot', function (buf) {
+      data += buf
+      if (data.match(/\n/)) {
+        const d = data.split('\n')
+        const v = d.shift()
+        data = d.join('')
+        arrNumber = v.split('\t').map(item => parseFloat(item))
+      }
+      // console.log(arrNumber)
+      // console.log(data.split('\t'));
+      // socket.emit('my other event', { my: 'data' });
+    });
+    console.log(data)
+    var animate = function () {
+      // console.log(arrNumber)
+      requestAnimationFrame(animate);
+      // if (arrNumber[0]) {
+      const rx = (arrNumber[1] / -180) * Math.PI
+      const ry = (arrNumber[2] / 180) * Math.PI
+      const rz = (arrNumber[0] / 180) * Math.PI
+
+      cube.rotation.z = rx
+      cube.rotation.x = ry
+      cube.rotation.y = rz
+      renderer.render(scene, camera);
+    }
+    animate()
+			// var animate = function () {
+			// 	requestAnimationFrame( animate );
+
+			// 	cube.rotation.x+= 0.01;
+			// 	cube.rotation.y += 0.01;
+
+			// 	renderer.render( scene, camera );
+			// };</script>
+</body>
+
+</html>
